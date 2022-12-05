@@ -5,7 +5,6 @@ from typing import Sequence
 import enum
 import functools
 
-
 FLAGS = flags.FLAGS
 _INPUT_FILE = flags.DEFINE_string('input', None, 'Path to the input file.')
 
@@ -22,8 +21,9 @@ class Shape(enum.Enum):
 
   def __ge__(self, other):
     if (self == Shape.ROCK and other == Shape.SCISSOR) or (
-        self == Shape.PAPER and other == Shape.ROCK) or (
-          self == Shape.SCISSOR and other == Shape.PAPER):
+        self == Shape.PAPER
+        and other == Shape.ROCK) or (self == Shape.SCISSOR
+                                     and other == Shape.PAPER):
       return True
     return False
 
@@ -50,11 +50,16 @@ def compute_score(rounds: Sequence[tuple[Shape, Shape]]) -> int:
       score += 3
 
   return score
-  
+
+
 def part1(rounds: Sequence[tuple[str, str]]):
   shape = {
-    'A': Shape.ROCK, 'B': Shape.PAPER, 'C': Shape.SCISSOR,
-    'X': Shape.ROCK, 'Y': Shape.PAPER, 'Z': Shape.SCISSOR,    
+      'A': Shape.ROCK,
+      'B': Shape.PAPER,
+      'C': Shape.SCISSOR,
+      'X': Shape.ROCK,
+      'Y': Shape.PAPER,
+      'Z': Shape.SCISSOR,
   }
 
   rounds = [(shape[a], shape[b]) for (a, b) in rounds]
@@ -63,13 +68,15 @@ def part1(rounds: Sequence[tuple[str, str]]):
 
 def part2(rounds: Sequence[tuple[str, str]]):
   shape = {
-    'A': Shape.ROCK, 'B': Shape.PAPER, 'C': Shape.SCISSOR,
+      'A': Shape.ROCK,
+      'B': Shape.PAPER,
+      'C': Shape.SCISSOR,
   }
 
   outcome = {
-    'X': -1, # Lose.
-    'Y': 0,  # Draw.
-    'Z': 1,  # Win.
+      'X': -1,  # Lose.
+      'Y': 0,  # Draw.
+      'Z': 1,  # Win.
   }
 
   rs = []
@@ -85,13 +92,14 @@ def part2(rounds: Sequence[tuple[str, str]]):
 
     assert found
 
-  print('total score: ', compute_score(rs))        
+  print('total score: ', compute_score(rs))
+
 
 def main(argv):
   rounds = parse(_INPUT_FILE.value)
   part1(rounds)
   part2(rounds)
-  
+
 
 if __name__ == '__main__':
   app.run(main)
