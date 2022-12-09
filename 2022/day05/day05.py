@@ -21,7 +21,7 @@ class Cmd():
 Stacks = list[list[str]]
 
 
-def parse(path: str) -> (Stacks, Sequence[Cmd]):
+def parse(path: str) -> tuple[Stacks, Sequence[Cmd]]:
   with open(path) as f:
     lines = f.read().splitlines()
 
@@ -38,6 +38,7 @@ def parse(path: str) -> (Stacks, Sequence[Cmd]):
   cmds = []
   for l in cmd_lines:
     m = re.match(r"move (\d+) from (\d+) to (\d+)", l)
+    assert m
     qty, frm, to = m.groups()
     cmds.append(Cmd(qty=int(qty), frm=int(frm) - 1, to=int(to) - 1))
 

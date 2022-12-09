@@ -18,6 +18,9 @@ def read(path: str) -> Sequence[int]:
 
 
 def main(argv):
+  import os
+  print('>>', os.getcwd())    
+
   calories = read(_INPUT_FILE.value)
 
   print(f'Max carried: {max(calories)}')
