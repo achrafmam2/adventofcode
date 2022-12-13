@@ -5,10 +5,6 @@ load("@pypi//:requirements.bzl", "requirement")
 py_binary(
   name = "main",
   srcs = ["main.py"],
-  data = [
-    "small",
-    "large",
-  ],
   deps = [
     requirement("absl-py"),
     requirement("numpy"),

@@ -48,7 +48,7 @@ def parse(path: str) -> tuple[np.ndarray, Start, Target]:
   return mp, start, target
 
 
-def bfs(heightmap: np.ndarray, *, start: Point, target: Point) -> int:
+def bfs(heightmap: np.ndarray, start: Point) -> np.ndarray:
 
   def is_out_of_bound(p: Point) -> bool:
     nonlocal heightmap
@@ -57,13 +57,13 @@ def bfs(heightmap: np.ndarray, *, start: Point, target: Point) -> int:
     return (x < 0 or x >= n) or (y < 0 or y >= m)
 
   def is_valid_move(*, frm: Point, to: Point) -> bool:
-    return heightmap[to] <= heightmap[frm] + 1
+    return heightmap[frm] <= heightmap[to] + 1
 
   MOVES = [Point(0, 1), Point(1, 0), Point(-1, 0), Point(0, -1)]
 
   q = collections.deque()
   seen = set()
-  dists = np.zeros_like(heightmap)
+  dists = np.full(heightmap.shape, np.inf)
 
   q.append(start)
   seen.add(start)
@@ -82,13 +82,29 @@ def bfs(heightmap: np.ndarray, *, start: Point, target: Point) -> int:
       seen.add(v)
       dists[v] = 1 + dists[u]
 
-  return dists[target]
+  return dists
 
 
 def main(argv):
   heightmap, start, target = parse(_INPUT_FILE.value)
 
-  print(bfs(heightmap, start=start, target=target))
+  # Shortest distance from the target to all other points in the map.
+  # The operator `shortest distance (SD)` is commutative. That is `SD(a to b)`
+  # is equal to `SD(b to a)`.
+  dists = bfs(heightmap, target)
+
+  # Part 1.
+  # We look for the shortest path from `start` to `target`.
+  print(dists[start])
+
+  # Part 2.
+  # We look for the shortest path from any 0 elevation point to `target`.
+  best = np.inf
+  with np.nditer(heightmap, flags=['multi_index']) as it:
+    for h in it:
+      if h == 0:
+        best = min(best, dists[it.multi_index])
+  print(best)
 
 
 if __name__ == '__main__':
